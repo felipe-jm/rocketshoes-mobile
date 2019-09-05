@@ -9,7 +9,3 @@ export default class Cart extends Component {
     return <View />;
   }
 }
-
-Cart.navigationOptions = {
-  title: 'Cart',
-};
