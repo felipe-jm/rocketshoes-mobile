@@ -10,19 +10,35 @@ export const Container = styled.View`
 export const ProductsList = styled.FlatList``;
 
 export const ProductContainer = styled.View`
-  background: #eee;
-  padding: 10px 20px;
+  background: #ddd;
+  padding: 30px 30px;
   border-radius: 4px;
 `;
 
 export const ProductImage = styled.Image`
   width: 250px;
+  border-radius: 4px;
 `;
 
-export const ProductName = styled.Text``;
+export const ProductName = styled.Text`
+  font-size: 16px;
+  margin: 5px 0;
+  color: #333;
+`;
 
-export const ProductPrice = styled.Text``;
+export const ProductPrice = styled.Text`
+  font-weight: bold;
+  margin: 5px 0;
+`;
 
-export const ProductButton = styled(RectButton)``;
+export const ProductButton = styled(RectButton)`
+  margin: 5px 0;
+  padding: 10px 20px;
+  background: #005b96;
+  border-radius: 4px;
+`;
 
-export const ProductButtonText = styled.Text``;
+export const ProductButtonText = styled.Text`
+  color: #fff;
+  font-weight: bold;
+`;
