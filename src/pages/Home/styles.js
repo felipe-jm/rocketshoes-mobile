@@ -9,9 +9,12 @@ export const Container = styled.View`
 
 export const ProductContainer = styled.View`
   background: #23272a;
+  max-width: 400px;
+  height: 400px;
   padding: 30px 30px;
   border-radius: 4px;
   margin: 0 10px;
+  align-items: center;
 `;
 
 export const ProductImage = styled.Image`
@@ -24,7 +27,6 @@ export const ProductName = styled.Text`
   font-size: 16px;
   margin: 5px 0;
   color: #fff;
-  width: 100%;
 `;
 
 export const ProductPrice = styled.Text`
@@ -34,10 +36,10 @@ export const ProductPrice = styled.Text`
 `;
 
 export const ProductButton = styled(RectButton)`
-  margin: 5px 0;
   padding: 10px 20px;
   background: #005b96;
   border-radius: 4px;
+  margin-top: auto;
 
   flex-direction: row;
 `;

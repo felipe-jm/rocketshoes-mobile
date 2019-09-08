@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
+  flex: 1;
   padding: 10px;
   background: #23272a;
   border-radius: 4px;
@@ -18,9 +19,12 @@ export const ProductImage = styled.Image`
   width: 100px;
   height: 100px;
   border-radius: 4px;
+  margin-right: 5px;
 `;
 
-export const ProductDescription = styled.View``;
+export const ProductDescription = styled.View`
+  flex: 1;
+`;
 
 export const ProductName = styled.Text`
   color: #fff;
@@ -91,15 +95,17 @@ export const ProductTotal = styled.Text`
 
 export const FinishOrder = styled.TouchableOpacity`
   align-items: stretch;
-  margin: 5px 0;
-  padding: 5px 20px;
+  padding: 10px 20px;
+  margin: 10px 0;
   background: #005b96;
   border-radius: 4px;
   text-align: center;
+  margin-top: auto;
 `;
 
 export const FinishOrderText = styled.Text`
   color: #fff;
   color: #fff;
   font-size: 20px;
+  font-weight: bold;
 `;
