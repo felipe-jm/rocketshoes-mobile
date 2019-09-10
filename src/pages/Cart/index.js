@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { FlatList } from 'react-native-gesture-handler';
 
-import { ImageBackground } from 'react-native';
+import { ImageBackground, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { formatPrice } from '../../util/format';
 
@@ -38,15 +38,15 @@ class Cart extends Component {
   };
 
   increment(product) {
-    const { updateAmount } = this.props;
+    const { updateAmountRequest } = this.props;
 
-    updateAmount(product.id, product.amount + 1);
+    updateAmountRequest(product.id, product.amount + 1);
   }
 
   decrement(product) {
-    const { updateAmount } = this.props;
+    const { updateAmountRequest } = this.props;
 
-    updateAmount(product.id, product.amount - 1);
+    updateAmountRequest(product.id, product.amount - 1);
   }
 
   render() {
