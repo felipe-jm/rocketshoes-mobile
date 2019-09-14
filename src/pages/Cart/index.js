@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
 
-import { ImageBackground, Alert } from 'react-native';
+import { ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { formatPrice } from '../../util/format';
 
@@ -30,95 +29,83 @@ import {
   FinishOrderText,
 } from './styles';
 
-class Cart extends Component {
-  handleRemove = id => {
-    const { removeFromCart } = this.props;
+export default function Cart() {
+  const products = useSelector(state =>
+    state.cart.map(product => ({
+      ...product,
+      subtotal: formatPrice(product.price * product.amount),
+      priceFormatted: formatPrice(product.price),
+    }))
+  );
 
-    removeFromCart(id);
-  };
+  const total = useSelector(state =>
+    formatPrice(
+      state.cart.reduce((totalSum, product) => {
+        return totalSum + product.price * product.amount;
+      }, 0)
+    )
+  );
 
-  increment(product) {
-    const { updateAmountRequest } = this.props;
+  const dispatch = useDispatch();
 
-    updateAmountRequest(product.id, product.amount + 1);
+  function handleRemove(id) {
+    dispatch(CartActions.removeFromCart(id));
   }
 
-  decrement(product) {
-    const { updateAmountRequest } = this.props;
-
-    updateAmountRequest(product.id, product.amount - 1);
+  function increment(product) {
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount + 1));
   }
 
-  render() {
-    const { products, total } = this.props;
-
-    return (
-      <ImageBackground
-        source={background}
-        style={{ width: '100%', height: '100%' }}
-      >
-        <FlatList
-          data={products}
-          keyExtractor={product => String(product.id)}
-          renderItem={({ item }) => (
-            <Container>
-              <ProductData>
-                <ProductImage source={{ uri: item.image }} />
-                <ProductDescription>
-                  <ProductName>{item.title}</ProductName>
-                  <ProductPrice>{item.price}</ProductPrice>
-                </ProductDescription>
-                <ProductDelete onPress={() => this.handleRemove(item.id)}>
-                  <Icon name="delete-forever" size={32} color="#005b96" />
-                </ProductDelete>
-              </ProductData>
-              <AmountContainer>
-                <Amount>
-                  <AmountButton onPress={() => this.decrement(item)}>
-                    <Icon
-                      name="remove-circle-outline"
-                      size={24}
-                      color="#005b96"
-                    />
-                  </AmountButton>
-                  <AmountText>{item.amount}</AmountText>
-                  <AmountButton onPress={() => this.increment(item)}>
-                    <Icon name="add-circle-outline" size={24} color="#005b96" />
-                  </AmountButton>
-                </Amount>
-                <Subtotal>{item.subtotal}</Subtotal>
-              </AmountContainer>
-            </Container>
-          )}
-        />
-        <ProductFinalInfo>
-          <ProductTotalText>Total</ProductTotalText>
-          <ProductTotal>{total}</ProductTotal>
-          <FinishOrder>
-            <FinishOrderText>Finish Order</FinishOrderText>
-          </FinishOrder>
-        </ProductFinalInfo>
-      </ImageBackground>
-    );
+  function decrement(product) {
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount - 1));
   }
+
+  return (
+    <ImageBackground
+      source={background}
+      style={{ width: '100%', height: '100%' }}
+    >
+      <FlatList
+        data={products}
+        keyExtractor={product => String(product.id)}
+        renderItem={({ item }) => (
+          <Container>
+            <ProductData>
+              <ProductImage source={{ uri: item.image }} />
+              <ProductDescription>
+                <ProductName>{item.title}</ProductName>
+                <ProductPrice>{item.priceFormatted}</ProductPrice>
+              </ProductDescription>
+              <ProductDelete onPress={() => handleRemove(item.id)}>
+                <Icon name="delete-forever" size={32} color="#005b96" />
+              </ProductDelete>
+            </ProductData>
+            <AmountContainer>
+              <Amount>
+                <AmountButton onPress={() => decrement(item)}>
+                  <Icon
+                    name="remove-circle-outline"
+                    size={24}
+                    color="#005b96"
+                  />
+                </AmountButton>
+                <AmountText>{item.amount}</AmountText>
+                <AmountButton onPress={() => increment(item)}>
+                  <Icon name="add-circle-outline" size={24} color="#005b96" />
+                </AmountButton>
+              </Amount>
+              <Subtotal>{item.subtotal}</Subtotal>
+            </AmountContainer>
+          </Container>
+        )}
+      />
+      <ProductFinalInfo>
+        <ProductTotalText>Total</ProductTotalText>
+        <ProductTotal>{total}</ProductTotal>
+        <FinishOrder>
+          <FinishOrderText>Finish Order</FinishOrderText>
+        </FinishOrder>
+      </ProductFinalInfo>
+    </ImageBackground>
+  );
 }
-
-const mapStateToProps = state => ({
-  products: state.cart.map(product => ({
-    ...product,
-    subtotal: formatPrice(product.price * product.amount),
-  })),
-  total: formatPrice(
-    state.cart.reduce((total, product) => {
-      return total + product.price * product.amount;
-    }, 0)
-  ),
-});
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(CartActions, dispatch);
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Cart);

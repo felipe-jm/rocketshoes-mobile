@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { ImageBackground, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { formatPrice } from '../../util/format';
@@ -21,38 +20,38 @@ import {
   Amount,
 } from './styles';
 
-class Home extends Component {
-  state = {
-    products: [],
-  };
+export default function Home() {
+  const [products, setProducts] = useState([]);
 
-  async componentDidMount() {
-    const response = await api.get('/products');
+  useEffect(() => {
+    async function loadProducts() {
+      const response = await api.get('/products');
 
-    const data = response.data.map(product => ({
-      ...product,
-      priceFormatted: formatPrice(product.price),
-    }));
+      const data = response.data.map(product => ({
+        ...product,
+        priceFormatted: formatPrice(product.price),
+      }));
 
-    this.setState({
-      products: data,
-    });
+      setProducts(data);
+    }
+
+    loadProducts();
+  }, []);
+
+  const dispatch = useDispatch();
+
+  function handleAdd(id) {
+    dispatch(CartActions.addToCartRequest(id));
   }
 
-  handleAdd = id => {
-    const { addToCartRequest } = this.props;
-
-    addToCartRequest(id);
-  };
-
-  renderProduct = ({ item }) => {
+  function renderProduct({ item }) {
     return (
       <Container>
         <ProductContainer key={item.id}>
           <ProductImage source={{ uri: item.image }} />
           <ProductName>{item.title}</ProductName>
           <ProductPrice>{item.priceFormatted}</ProductPrice>
-          <ProductButton onPress={() => this.handleAdd(item.id)}>
+          <ProductButton onPress={() => handleAdd(item.id)}>
             <ProductAmount>
               <Icon name="add-shopping-cart" color="#FFF" size={20} />
               <Amount />
@@ -62,31 +61,19 @@ class Home extends Component {
         </ProductContainer>
       </Container>
     );
-  };
-
-  render() {
-    const { products } = this.state;
-
-    return (
-      <ImageBackground
-        source={background}
-        style={{ width: '100%', height: '100%' }}
-      >
-        <FlatList
-          horizontal
-          data={products}
-          keyExtractor={product => String(product.id)}
-          renderItem={this.renderProduct}
-        />
-      </ImageBackground>
-    );
   }
+
+  return (
+    <ImageBackground
+      source={background}
+      style={{ width: '100%', height: '100%' }}
+    >
+      <FlatList
+        horizontal
+        data={products}
+        keyExtractor={item => String(item.id)}
+        renderItem={renderProduct}
+      />
+    </ImageBackground>
+  );
 }
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(CartActions, dispatch);
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(Home);

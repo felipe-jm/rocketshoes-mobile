@@ -34,6 +34,8 @@ function* addToCart({ id }) {
     };
 
     yield put(addToCartSuccess(data));
+
+    NavigationService.navigate('Cart');
   }
 }
 
@@ -50,8 +52,6 @@ function* updateAmount({ id, amount }) {
   }
 
   yield put(updateAmountSuccess(id, amount));
-
-  NavigationService.navigate('Cart');
 }
 
 export default all([
