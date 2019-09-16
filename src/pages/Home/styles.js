@@ -32,6 +32,7 @@ export const ProductName = styled.Text`
 export const ProductPrice = styled.Text`
   color: #fff;
   font-weight: bold;
+  font-size: 20px;
   margin: 5px 0;
 `;
 
